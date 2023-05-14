@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- muestra una imagen en la pestaña de la ventara icono al lado del titulo o nombre de la ventana ( favicon ) -->
+  <link rel="shortcut icon" href="./static/images/favicon-.png">
+  <title>
+    {% block title %}
+    {% endblock %}
+  </title>
+  <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styleOfCSS.css') }}">
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+      <path
+        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+  </svg>
+
+  <!-- <style>
+    .fondo {
+      background: url("https://mdbootstrap.com/img/new/fluid/city/018.jpg");
+      height: 100vh;
+    }
+
+    /* Height for devices larger than 576px */
+    @media (min-width: 992px) {
+      .fondo {
+        margin-top: -58.59px;
+      }
+    }
+  </style> -->
+
+</head>
+
+<body>
+  <div class="fondo">
+    <div class="container">
+
+      <header class="mb-auto">
+        <div class="d-flex h-100 ">
+          <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+            <!-- BARRA DE NAVEGACION NAVBAR Y NAV -->
+            <nav class="navbar bg-body-tertiary rounded-3 bg-secondary bg-opacity-50">
+              <div class="container">
+
+                <!-- LOGO OH IMAGEND DE LA PAGINA -->
+                <a class="brand" href="{{url_for('perfil')}}">
+                  <img src="{{ url_for('static', filename='images/Sin.png') }}" class="rounded-5 rounded"
+                    alt="logo de la web" width="45" height="47">
+                </a>
+
+                <!-- NAV DEL LADO DERECHO -->
+                <ul class="nav nav-tabs ">
+
+                  <!-- solo muestra esta parte si estas en un inicio de session con: {% if g.user %} and {% else %} , {% endif %} -->
+                  {% if g.user %}
+                  <li class="nav-item">
+                    <!-- BOTON PARA NO MODAL - salir de logiado no se usa boton para que no emerja un modal, solo cierra la cecion llamando a 'logout'-->
+                    <a href="{{url_for('logout')}}" class="nav-link">
+                      <img src="{{ url_for('static', filename='images/iconosPerfil/nav/salir.png')}}" title="Log Out">
+                    </a>
+                    <!-- tomata el valor de sing out si esta logeado -->
+                    <!-- se borra los elementos para generar una ventana MODAL -->
+                  </li>
+
+                  <li class="nav-item">
+                    <!-- BOTON PARA EL MODAL -->
+                    <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#MENSAJE"
+                      data-bs-whatever="">
+                      <img src="{{ url_for('static', filename='images/iconosPerfil/nav/enviar.png') }}" title="Send Mjs"
+                        alt="">
+                    </button>
+                    <!-- data-bs-target="#MENSAJE" = nombre del modal a ejecutar por id:"#MENSAJE" -->
+                  </li>
+
+                  <li class="nav-item">
+                    <!-- BOTON PARA EL MODAL -->
+                    <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#CARGAR"
+                      data-bs-whatever="">
+                      <img src="{{ url_for('static', filename='images/iconosPerfil/nav/cargar.png') }}"
+                        title="Up Date Img">
+                    </button>
+                    <!-- data-bs-target="#CARGAR" = nombre del modal a ejecutar por id:"#CARGAR" -->
+                  </li>
+
+
+                  {% else %}
+                  <li class="nav-item">
+                    <!-- <a class="nav-link active" aria-current="page" href="#">Active</a> -->
+                    <!-- BOTON PARA EL MODAL -->
+                    <button type="button" class="nav-link text-white" data-bs-toggle="modal"
+                      data-bs-target="#COMENTARIOS" data-bs-whatever=""><strong> Comentarios </strong></button>
+                    <!-- data-bs-target="#COMENTARIOS" = nombre del modal a ejecutar por id:"#CONTACTO" -->
+                  </li>
+
+                  <li class="nav-item">
+                    <!-- <a class="nav-link" href="#">Link</a> -->
+                    <!-- BOTON PARA EL MODAL -->
+                    <button type="button" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#MENSAJE"
+                      data-bs-whatever=""><strong> Mensaje </strong></button>
+                    <!-- data-bs-target="#MENSAJE" = nombre del modal a ejecutar por id:"#MENSAJE" -->
+                  </li>
+
+                  <li class="nav-item">
+                    <!-- BOTON PARA EL MODAL -->
+                    <button type="button" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#LOGIN"
+                      data-bs-whatever=""><strong> Login </strong></button>
+                    <!-- data-bs-target="#LOGIN" = nombre del modal a ejecutar por id:"#LOGIN" -->
+                  </li>
+
+                  {% endif %}
+
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        <!-- VENTANA EMERGENTE DEL MODAL 
+      boton de ejecucionde data-bs-target="#LOGIN", se idenficado por id="LOGIN"-->
+        <div class="modal fade" id="LOGIN" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Realiza tu Login: </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+
+                <form method="POST" action="login" onSubmit="" enctype="multipart/form-data">
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtUsuario">Usuario:</label>
+                    <input class="form-control" type="text" name="txtUsuario" id="txtUsuario" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtPassword">Contraseña: </label>
+                    <div class="position-relative">
+                      <input class="form-control" type="password" name="txtPassword" id="txtPassword"
+                        title="Contraseña:" required>
+                      <span class="position-absolute top-50 end-0 translate-middle" id="txtPassword">
+                        <img src="/static/images/iconosPerfil/viewPassword/view.png" class="" sizes="30" id="imagen"
+                          width="20" onclick="mostrarPasswordOnClick();" onmouseover="mostrarPasswordOnMouseOver();"
+                          onmouseout="mostrarPasswordOnMouseOut()">
+                      </span>
+
+                    </div>
+                  </div>
+
+                  <div class="position-relative mb-3">
+                    <input class="form-check-input " type="checkbox" name="checkbox" id="checkbox" required>
+                    <label for="checkbox">Acepto condiciones</label>
+                    <a href="#" type="button" class="position-absolute top-50 end-0 translate-middle-y"
+                      data-bs-toggle="modal" data-bs-target="#FORGOT_PASSWORD">Forget Password</a>
+                  </div>
+
+                  <div class="modal-footer ">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                      onclick="validarFormulario();">
+                  </div>
+                </form>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- VENTANA EMERGENTE DEL MODAL 
+      boton de ejecucionde data-bs-target="#MENSAJE", se idenficado por id="MENSAJE"-->
+        <div class="modal fade" id="MENSAJE" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Deja tu Mensaje: </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="send" onSubmit="" enctype="multipart/form-data">
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtMensajeDE">De parte de:</label>
+                    <input class="form-control" type="text" name="txtMensajeDE" id="txtMensajeDE" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtMensajePara">Dirijido Ah:</label>
+                    <input class="form-control" type="text" name="txtMensajePara" id="txtMensajePara" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtAreaMensaje">Mensaje: </label>
+                    <textarea class="form-control" name="txtAreaMensaje" id="txtAreaMensaje" cols="30" rows="5"
+                      required></textarea>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                      onclick="validarFormulario();">
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VENTANA EMERGENTE DEL MODAL 
+      boton de ejecucionde data-bs-target="#COMENTARIOS", se idenficado por id="COMENTARIOS"-->
+        <div class="modal fade" id="COMENTARIOS" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Deja tu Comentario: </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="comentarios" onSubmit="" enctype="multipart/form-data">
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtNombreComentario">Nombre:</label>
+                    <input class="form-control" type="text" name="txtNombreComentario" id="txtNombreComentario"
+                      placeholder="Dejanos tu nombre" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtCorreoComentario">Correo:</label>
+                    <input class="form-control" type="text" name="txtCorreoComentario" id="txtCorreoComentario"
+                      placeholder="Escribe tu Correo" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtAreaComentario">Comentario: </label>
+                    <textarea class="form-control" name="txtAreaComentario" id="txtAreaComentario" cols="30" rows="5"
+                      placeholder="Adelante, Puedes dejar un comentario que nos ayude a mejorar" required></textarea>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                      onclick="validarFormulario();">
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VENTANA EMERGENTE DEL MODAL 
+      boton de ejecucionde data-bs-target="#FORGOT_PASSWORD", se idenficado por id="FORGOT_PASSWORD"-->
+        <div class="modal fade" id="FORGOT_PASSWORD" tabindex="-1" aria-labelledby="exampleModalLabel4"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel4">Restablecer la Contraseña. </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="forgetPassword" onSubmit="" enctype="multipart/form-data">
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtConfirmarCorreo">Confirma Correo:</label>
+                    <input class="form-control" type="email" name="txtConfirmarCorreo" id="txtConfirmarCorreo" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtNuevaContraseña">Nuevo Contraseña: </label>
+
+                    <!-- div que contiene el input y la imagen para mostrar la contraseña -->
+                    <div class="position-relative">
+                      <input class="form-control" type="password" name="txtNuevaContraseña" id="txtNuevaContraseña"
+                        required>
+                      <span class="position-absolute top-50 end-0 translate-middle" id="txtNuevaContraseña">
+                        <img src="/static/images/iconosPerfil/viewPassword/view.png" class="" sizes="30"
+                          id="imgNuevaContraseña" width="20">
+
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtConfirmarContraseña">Confirmar Contraseña: </label>
+
+                    <!-- div que contiene el input y la imagen para mostrar la contraseña -->
+                    <div class="position-relative">
+                      <input class="form-control" type="password" name="txtConfirmarContraseña"
+                        id="txtConfirmarContraseña" required>
+                      <span class="position-absolute top-50 end-0 translate-middle" id="txtConfirmarContraseña">
+                        <img src="{{ url_for('static', filename='images/iconosPerfil/viewPassword/view.png') }}"
+                          class="" sizes="30" id="imgConfirmarContraseña" width="20">
+                        <!-- onclick="mostrarPasswordOnClick();" onmouseover="mostrarPasswordOnMouseOver2();"
+                      onmouseout="mostrarPasswordOnMouseOut2();" -->
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                      onclick="validarFormulario();">
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VENTANA EMERGENTE DEL MODAL 
+      boton de ejecucionde data-bs-target="#CARGAR", se idenficado por id="CARGAR"-->
+        <div class="modal fade" id="CARGAR" tabindex="-1" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Selecciona tu imagen: </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="cargarImagen" onSubmit="" enctype="multipart/form-data">
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtFoto">De parte de:</label>
+                    <input class="form-control" type="file" name="txtFoto" id="txtFoto" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="col-form-label" for="txtAreaDescripcion">Descripcion de la imagen: </label>
+                    <textarea class="form-control" name="txtAreaDescripcion" id="txtAreaDescripcion" cols="30" rows="5"
+                      required></textarea>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                      onclick="validarFormulario();">
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </header>
+
+    </div>
+
+
+    <!-- RENDERISADO DEL BODY DE CADA PAGINA  -->
+    <div class="container px-5">
+
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+          <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill" />
+          </svg>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+
+      
+      <div class="px-5">
+        {% block content %}
+
+
+        {% endblock %}
+      </div>
+
+    </div>
+
+
+
+
+    <!-- PLANTILLA DE LOS svg LOGOS de FACEBOOK, INSTAGRAM Y TWITTER -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="bootstrap" viewBox="0 0 118 94">
+        <!-- <title>Bootstrap</title> -->
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z">
+        </path>
+      </symbol>
+      <symbol id="facebook" viewBox="0 0 16 16">
+        <path
+          d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+      </symbol>
+      <symbol id="instagram" viewBox="0 0 16 16">
+        <path
+          d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z" />
+      </symbol>
+      <symbol id="twitter" viewBox="0 0 16 16">
+        <path
+          d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+      </symbol>
+    </svg>
+
+
+
+
+    <!-- PLANTILLA DEL FOOTER -->
+    <div class="b-example-divider"></div>
+    <div class="container">
+
+      <footer
+        class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top bg-transparent bg-opacity-50">
+
+        <div class="col-md-4 d-flex align-items-center">
+          <strong>
+            <div class=" text-primary">
+              <span class="mb-3 mb-md-0 text-white">&copy; 2023 Company, Inc. Steven Ribon Blanco <br> Todos los derechos
+                reservados</span>
+            </div>
+          </strong>
+        </div>
+
+        <a href="/"
+          class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+          <img src="/static/images/Sin.png" class="rounded-3" width="40" height="42">
+          <use xlink:href="#bootstrap" /></svg>
+        </a>
+
+        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex ">
+          <li class="ms-3"><a class="text-info rounded-circle bg-white p-1" href="#"><svg class="" width="24" height="24">
+                <use xlink:href="#twitter" />
+              </svg></a></li>
+          <li class="ms-3"><a class="text-muted rounded-3 bg-white p-1" href="#"><svg class="" width="24" height="24">
+                <use xlink:href="#instagram" />
+              </svg></a></li>
+          <li class="ms-3"><a class="text-muted rounded-circle bg-white p-1" href="#"><svg class="" width="24" height="24">
+                <use xlink:href="#facebook" />
+              </svg></a></li>
+        </ul>
+
+        <div class="" id="copyright">
+
+      </footer>
+
+    </div>
+  </div>
+
+</body>
+
+<script src="{{ url_for('static', filename='js/validacion.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- EJEMPLO DE OTRO FOOTER -->
+<!-- <div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">&copy; 2022 Company, Inc</p>
+
+    <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+    </a>
+
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+  </footer>
+</div> -->

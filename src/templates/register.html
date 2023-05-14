@@ -1,0 +1,112 @@
+{% extends 'index.html' %} 
+
+{% block title %}
+    Register
+{% endblock %}
+
+
+{% block header %}
+
+{% endblock %} 
+
+
+
+{% block content %}
+<body class="">
+    <div class="" >
+
+        <!-- w: weigth - 50: porsentage que ocupa en la pantalla / mx-auto: clase para centrar horizontalmente contenido de nivel de bloque de ancho fijo  -->
+        <div class="w-50 mx-auto ">
+
+            <!-- se usa una ventana emergente modal como contenido sin uso de un boton o hacer click -->
+            <div class="modal-sheet d-block body-secondary p-3" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content rounded-4 shadow bg-white opacity-75">
+                    
+                        <!-- text-center: centra el texto / border-0: elimina el bordeado del header que uun modal pone para dividir el header (title) del body (form)  -->
+                        <div class="text-center pb-4 p-4 border-0">
+                            <h1 class="fw-bold mb-0 fs-2 " >Realiza tu Registro: </h1>
+                        </div>
+        
+                        <div class="modal-body">
+                            <form class="p-3" method="POST" action="register" onSubmit="" enctype="multipart/form-data">                
+        
+                                <div class="contenido_interno_register mb-3">
+                                    <label for="txtNombre" class="col-form-label">Nombre Completo: </label>
+                                    <input type="text" class="form-control" name="txtNombre" id="txtNombre" required>
+                                </div>
+        
+                                <div class="contenido_interno mb-3">
+                                    <label for="txtUsuario" class="col-form-label">Usuario: </label>
+                                    <input type="text" class="form-control" name="txtUsuario" id="txtUsuario" required>
+                                </div>
+        
+                                <div class="contenido_interno separado-entre-ellos mb-3">
+                                    <label for="sexo" class="col-form-label">Sexo: </label> 
+                                    <ul class="nav">
+                                        <div class="hstack gap-3">
+                                            <li>
+                                                
+                                                <input type="radio" class="" name="sexo" id="hombre" value="hombre">
+                                                <label for="hombre">Hombre</label> 
+                                            
+                                            </li>
+                
+                                            <li>
+                                                
+                                                <input type="radio" class="" name="sexo" id="mujer" value="mujer" required>
+                                                <label for="mujer">Mujer</label>
+                                                
+                                            </li>
+                                        </div>  
+                                    </ul>             
+                                </div>
+        
+                                <div class="contenido_interno mb-3">
+                                    <label for="txtEmail" class="col-form-label">Email: </label>
+                                    <input type="email" class="form-control" name="txtEmail" id="txtEmail" required>
+                                </div>
+        
+                                <div class="mb-3">
+                                    <label for="txtPasswordRegister" class="col-form-label">Password: </label>
+                                    <div class="position-relative">
+                                        <input type="password" class="form-control"name="txtPasswordRegister" id="txtPasswordRegister" 
+                                        title="txtPasswordRegister:" required>
+                                        <span class="position-absolute top-50 end-0 translate-middle" id="spanPasswordRegister"> 
+                                            <img src="/static/images/iconosPerfil/viewPassword/view.png" sizes="30" id="imgRegister" width="20" 
+                                            >
+                                        </span>
+                                    </div>
+                                </div>
+        
+                                <div class="modal-header border-bottom-0">
+                                    <div class="hstack gap-3">
+                                        <input type="checkbox" name="checkbox" id="checkbox" value="acepto" required>
+                                        <label for="checkbox">Declaro haber leído y aceptar las condiciones generales del programa y la normativa sobre protección de datos.
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+        
+                                <div class="modal-footer">
+                                    <!-- <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                                    onclick="validarFormulario();">
+                                    <a href="{{ url_for('login') }}" class="btn btn-primary" >Login</a> -->
+                                    <a href="{{ url_for('login') }}" class="btn btn-secondary m-3" >Close</a>
+                                    <input type="submit" class="btn btn-success" value="Enviar" name="Enviar" id="Enviar"
+                                    onclick="validarFormulario();">
+                                </div>
+        
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+                
+    </div>
+</body>
+{% endblock %}
+
+</html>
