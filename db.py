@@ -4,7 +4,7 @@ from flask import current_app, g
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# generate_password_hash: Para crear hashes resultado de aplicar PBKDF2. 
+# generate_password_hash: Para crear hashes resultado de aplicar PBKDF2.
 # check_password_hash: Para verificar una cadena generada por el método anterior.
 generate_password_hash('2') # 'pbkdf2:sha256:150000$Kc5ZhZvI$a749008a312f2b0b631b1253f0ba619d28982e874e35927f0315a1f151e72424'
 check_password_hash('pbkdf2:sha256:150000$Kc5ZhZvI$a749008a312f2b0b631b1253f0ba619d28982e874e35927f0315a1f151e72424','2')
@@ -47,7 +47,7 @@ def sql_select_data_user(user):
    str_sql = 'SELECT * FROM tabla_usuarios WHERE (usuario is ?)'
    data = (user)
 
-   con = sql_connection() 
+   con = sql_connection()
    cursorObj = con.cursor()
    cursorObj.execute(str_sql, [data])
    productos = cursorObj.fetchall()
@@ -77,7 +77,7 @@ def sql_select_productos(usuario, contraseña):
         print('no se encuentra en la db')
     else:
         return productos
-    
+
 
 
 
@@ -119,9 +119,9 @@ def sql_select_name_productos(usuario):
     con.commit()
     print('ESTA: ', productos)
     con.close()
-  
+
     return productos
-    
+
 
 
 
@@ -161,18 +161,23 @@ def sql_validar_existencia_emal(_email):
 
     # VALIDAMOS QUE NO EXISTA YA ESE _email PARA UN REGISTRO EXITOSO
     str_sql = 'SELECT correo FROM tabla_usuarios WHERE correo = ?'
-    data = (_email)  
+    data = _email
 
-    con = sql_connection()
-    cursor_obj = con.cursor()
-    print('antes: ', _email)
-    cursor_obj.execute(str_sql, [data])
-    email = cursor_obj.fetchone()
-    con.commit()
-    print('despues: ', email)
-    con.close()
+    db = get_db()
+    print('antes emal: ', _email)
+    _email = db.execute('SELECT correo FROM tabla_usuarios WHERE correo = ?',
+                              ([_email])).fetchone()
+    print('despues emal[0]: ', _email)
 
-    return (email)
+    # con = sql_connection()
+    # cursor_obj = con.cursor()
+    # print('antes emal: ', _email)
+    # email = cursor_obj.execute(str_sql, data).fetchone()
+    # # email = cursor_obj.fetchone()
+    # con.commit()
+    # print('despues emal: ', email)
+
+    return _email
 
 
 
@@ -182,18 +187,25 @@ def sql_validar_existencia_user(_user):
 
     # VALIDAMOS QUE NO EXISTA YA UN _user CON ESE NOMBRE PARA UN REGISTRO EXITOSO
     str_sql__user = 'SELECT usuario FROM tabla_usuarios WHERE usuario = ?'
-    data_user = (_user)
+    data_user = _user
 
-    con = sql_connection()
-    cursor_obj = con.cursor()
-    print('antes', user)
-    cursor_obj.execute(str_sql__user, [data_user])
-    user = cursor_obj.fetchone()
-    con.commit()
-    print('despues', user)
-    con.close()
 
-    return (user)
+    db = get_db()
+    print('antes user: ', _user)
+    _user = db.execute('SELECT usuario FROM tabla_usuarios WHERE usuario = ?',
+                              ([_user])).fetchone()
+    print('despues user[0]: ', _user)
+    
+    # con = sql_connection()
+    # cursor_obj = con.cursor()
+    # print('antes user:', user)
+    # cursor_obj.execute(str_sql__user, data_user)
+    # user = cursor_obj.fetchone()
+    # con.commit()
+    # print('despues user:', user)
+    # con.close()
+
+    return _user
 
 
 
@@ -205,11 +217,11 @@ def sql_insert_new_user(nombre, usuarios, correo, contraseña):
     # El objeto con obtiene la conexión con la base de datos llamando al método creado anteriormente
     con = sql_connection()
 
-    str_sql = "INSERT INTO usuarios (nombre, usuarios, correo, contraseña) VALUES (?,?,?,?)"
+    str_sql = "INSERT INTO tabla_usuarios (nombre, usuario, correo, contraseña) VALUES (?,?,?,?)"
     data = (nombre, usuarios, correo, contraseña)
 
     print(str_sql, data)
-    print('dentro: INSERT INTO usuarios (nombre, usuarios, correo, contraseña) VALUES (?,?,?,?)',
+    print('dentro: INSERT INTO tabla_usuarios (nombre, usuario, correo, contraseña) VALUES (?,?,?,?)',
     (nombre, usuarios, correo, contraseña))
     # 'INSERT INTO usuarios (nombre, usuarios, correo, contraseña) VALUES('f'{nombre}, {usuarios}, {correo}, {contraseña});'
 
@@ -223,7 +235,7 @@ def sql_insert_new_user(nombre, usuarios, correo, contraseña):
 
     # Actualizar los cambios realizados a la base de datos
     con.commit()
-    
+
     # Cerrar la conexión
     con.close()
 
@@ -268,7 +280,7 @@ def sql_select_data_user_file(id_user):
     con= sql_connection()
     cursorObj= con.cursor()
     cursorObj.execute(str_sql, [data])
-    
+
     files = cursorObj.fetchall()    # --> fetchone() captura una cadena con el contenido solicitado.
                                     # --> fetchall() captura una matris con todo el contenido solicitado.
     con.commit()
@@ -282,7 +294,7 @@ def sql_select_data_user_file(id_user):
 
 def cargar_data_perfil():
 
-    return 
+    return
 
 
 
@@ -306,7 +318,7 @@ def up_load_edit_perfil(nombre_perfil, descripcion_perfil, foto_perfil, id_user)
 
     # Actualizar los cambios realizados a la base de datos
     con.commit()
-    
+
     # Cerrar la conexión
     con.close()
 
