@@ -55,6 +55,9 @@ def login():
             _usuario = request.form['txtUsuario']
             _password = request.form['txtPassword']
 
+            print(_usuario)
+            print(_password)
+
             user = db.execute('SELECT * FROM tabla_usuarios WHERE usuario = ?',
                               ([_usuario])).fetchone() # db.sql_select_name_productos(_usuario) # sql_select_productos(_usuario, _password)
         
@@ -111,10 +114,17 @@ def register():
         if request.method == 'POST':
 
             # --> captura la variable dentro del input con el id con el nombre del [''], valida si hay una solicitud, pedido o request del metodo POST capturando la variable del input con el id establesido entre ['']
-            _nombre = request.form[('txtNombre')]
-            _usuario = request.form[('txtUsuario')]
-            _correo = request.form[('txtEmail')]
-            _contraseña = request.form[('txtPassword')]
+            _nombre = request.form[('txtNombreRegister')]
+            _usuario = request.form[('txtUsuarioRegister')]
+            _correo = request.form[('txtEmailRegister')]
+            _contraseña = request.form[('txtPasswordRegister')]
+
+
+            print(_nombre)
+            print(_usuario)
+            print(_correo) 
+            print(_contraseña)
+
 
             _passwordCifrado = generate_password_hash(f'{_contraseña}')             #--> generate_password_hash():genea un hash a la variable _nuevaContraseña
 
@@ -137,31 +147,41 @@ def register():
                 flash(error)
                 return render_template ('register.html')
             
-            validacion_correo = sql_validar_existencia_emal(_correo)
             validacion_usuario = sql_validar_existencia_user(_usuario)
+            validacion_correo = sql_validar_existencia_emal(_correo)
 
-            print(validacion_usuario)
-            print(validacion_correo)
+            print('usuario', validacion_usuario)
+            print('correo', validacion_correo)
             
-            if validacion_correo != None:
-                flash('ya existe ese nombre de usuario')
+            if validacion_usuario != None:
+                error= 'ya existe ese nombre de usuario'
+                flash(error)
                 print('ya existe ese nombre de usuario')
                 return render_template('register.html') 
             
-            if validacion_usuario != None:
+            if validacion_correo != None: 
+                error = f'ya existe un usuario con ese Correo: {_correo}'
                 flash(f'ya existe un usuario con ese Correo: {_correo}')                                 
                 print(f'ya existe un usuario con ese Correo: {_correo}') 
                 return render_template('register.html')    
-                
-            sql_insert_new_user(_nombre, _usuario, _correo, _passwordCifrado)
             
-            print('INSERT INTO usuario (nombre, usuario, correo, contraseña) VALUES (?,?,?,?)',
-                (_nombre, _usuario, _correo, _contraseña))
+            if validacion_correo == None and validacion_usuario == None:
+                print('ingresar el nuevo usuario')
+                sql_insert_new_user(_nombre, _usuario, _correo, _passwordCifrado)
+                
+                print('INSERT INTO tabla_usuarios (nombre, usuario, correo, contraseña) VALUES (?,?,?,?)',
+                    (_nombre, _usuario, _correo, _contraseña))
+                
+                error= 'Registro exitoso Gracias'
+                flash(error)
 
-            return redirect('login')
-        return render_template( 'register.html' )
-    except:
-        return render_template ('register.html')    
+
+                return render_template( 'login.html', error = error )
+
+        return render_template( 'register.html', error = error )
+    except Exception as e:
+        print(e)
+        return render_template ('register.html', e=e )    
     
 
 
@@ -401,13 +421,7 @@ def load_logged_in_user():
         ).fetchone()
         close_db()
 
-        print('g.user[0]: ', g.user[0])
-        print('g.user[1]: ', g.user[1])
-        print('g.user[2]: ', g.user[2])
-        print('g.user[3]: ', g.user[3])
-        print('g.user[4]: ', g.user[4])
-
-
+        
 
 
 # --> CEIERRE DE SESSION
@@ -418,7 +432,5 @@ def logout():
     return redirect(url_for('login'))
 
 
-
 if __name__ == '__main__':
     app.run(debug=True)
-
